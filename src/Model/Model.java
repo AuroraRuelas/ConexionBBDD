@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import View.Vista;
 
 public class Model {
-	private Vista miVista;
+	private Vista mVista;
 
 	private String bd;
 	private String login;
@@ -99,7 +99,7 @@ public class Model {
 	}
 
 	public void setVista(Vista miVista2) {
-		this.miVista = miVista2;
+		this.mVista = miVista2;
 	}
 
 }
