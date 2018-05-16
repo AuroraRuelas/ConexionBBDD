@@ -20,18 +20,19 @@ public class Model {
 	private String url;
 	private String driver;
 	private String sqlTabla1;
+	private String sqlTabla2;
 	private Connection conexion;
 
 	private DefaultTableModel miTabla;
 
 	public Model() {
 		try {
-			bd = "pruebasBBDDPedro";
+			bd = "mvcprog";
 			login = "root";
 			pwd = "";
 			url = "jdbc:mysql://localhost/?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 			driver = "com.mysql.cj.jdbc.Driver";
-			sqlTabla1 = "Select * from pruebasBBDDPedro.datosp1";
+			sqlTabla1 = "Select * from mvcprog.alumno";
 			Class.forName(driver);
 			conexion = DriverManager.getConnection(url, login, pwd);
 		} catch (Exception e) {
@@ -67,7 +68,29 @@ public class Model {
 		}
 		miTabla = new DefaultTableModel(contenido, cabecera);
 	}
-
+	private void cargarTabla2() {
+		miTabla = new DefaultTableModel();
+		int numColumnas = getNumColumnas(sqlTabla2);
+		Object[] contenido = new Object[numColumnas];
+		PreparedStatement pstmt;
+		try {
+			pstmt = conexion.prepareStatement(sqlTabla2);
+			ResultSet rset = pstmt.executeQuery();
+			ResultSetMetaData rsmd = rset.getMetaData();
+			for (int i = 0; i < numColumnas; i++) {
+				miTabla.addColumn(rsmd.getColumnName(i+1));
+			}
+			while (rset.next()) {
+				for (int col = 1; col <= numColumnas; col++) {
+					contenido[col - 1] = rset.getString(col);
+				}
+				miTabla.addRow(contenido);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	private int getNumColumnas(String sql) {
 		int num = 0;
 		try {
